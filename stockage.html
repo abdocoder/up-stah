@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<!-- Created By CodingNepal - www.codingnepalweb.com -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stockage</title>
+   <link rel="shortcut icon" href="image/png.png" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="content">
+      <div class="logo">
+        <a href="index.html">UP-STAH</a>
+      </div>
+      <ul class="menu-list">
+        <div class="icon cancel-btn">
+          <i class="fas fa-times"></i>
+        </div>
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="about apk.html">About APK</a></li>
+        <li><a href="separation.html">Séparation</a></li>
+        <li><a href="stockage.html">Stockage</a></li>
+      </ul>
+      <div class="icon menu-btn">
+        <i class="fas fa-bars"></i>
+      </div>
+    </div>
+  </nav>
+  <div class="banner"></div>
+  <div class="about">
+    <div class="content">
+        <div class="title"> Fixed roof tank </div> <br>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/a_3kOcjLBu4" title="YouTube video player" frameborder="0" allow="autoplay;" allowfullscreen></iframe>
+      <div class="title"> Descriptions sur le centre de stockage /Expédition de STAH </div>
+      <p>Le centre de stockage / Expédition de l'unité de production STAH se compose de :
+        -Trois bacs de stockage de pétrole brut R1, R2, R3 de capacité 5000 m³ chacun de type toit fixe.
+       
+    </p>
+    <p>Les stations de compression STAH/MRK sont conçues pour comprimer et déshydrater les gaz associés provenant des unités de séparation.
+Les gaz provenant de unité de séparation STAH sont des différance pression que alimenté la station de compression.
+        </p>
+<p>⦁	Un bac (WASH-TANK) R4 de capacité 540m3. <br>
+    ⦁	Deux électropompes (GUINARD). <br>
+    ⦁	Deux pompes diesel (MAREP) DIESEL. <br>
+    ⦁	Trois pompes  (OWECO) à gaz moteur</p>
+    <p>Les trois bacs R1, R2et R3 sont utilisés pour les différents mouvements de production et le WASH-TANK (R4) est utilisé pour les tests des puits.
+    </p>
+    <p> Le mouvement d’un bac de stockage se déroule en quatre phases : <br>
+        ⦁	Réception. <br>
+        ⦁	Décantation. <br>
+        ⦁	Expédition. <br>
+        ⦁	Attente. <br>
+        </p>
+    </div>
+  </div>
+  <div class="about">
+    <div class="content">
+      <div class="title"> Préparation d’un bac pour stockage </div>
+      <p>L’huile qui arrive a partir de séparateur BP par gravité, dévie vers les bacs de stockage à l’aide de manifold 10“, et pour la production de CTH dévie vers l’arrière de bac.</p>
+   <p> ⦁  Jaugeage et échantillonnage : <br> <br>
+    Il doit être effectué par des systèmes de contrôle de la production par jaugeage directe avec un ruban métallique, chaque 2 heur. <br> <br>
+    ⦁	 Le dégazage : <br> <br>
+    Tout en limitant les pertes par évaporation. <br> <br>
+    ⦁	La décantation d’eau : <br> <br>
+    En doit offrir un temps de tranquillisation suffisant pour que la décantation se termine
+    </p>
+    <div class="title"> Préparation d’un bac pour l’expédition  </div>
+    <p>Purgé le bac c-à-d  éliminé la totalité d’eau décantée au fond du bac à expédier afin de récupérer le maximum d’huile entraîné.</p>
+    <p>
+        Le manifold d’expédition est dimensionné en 10’’ et permet d’envoyer le brut vers les pompes GUINARD (électropompes) a l’aide de deux pompes Booster, Les 2 pompes Boosters de l’expédition assurent l’alimentation en brut des pompes d’expédition (GUINARD) selon le besoin à une pression de refoulement d’environ 3 bars.
+        </p>
+    </div>
+  </div>
+
+  <script>
+    const body = document.querySelector("body");
+    const navbar = document.querySelector(".navbar");
+    const menuBtn = document.querySelector(".menu-btn");
+    const cancelBtn = document.querySelector(".cancel-btn");
+    menuBtn.onclick = ()=>{
+      navbar.classList.add("show");
+      menuBtn.classList.add("hide");
+      body.classList.add("disabled");
+    }
+    cancelBtn.onclick = ()=>{
+      body.classList.remove("disabled");
+      navbar.classList.remove("show");
+      menuBtn.classList.remove("hide");
+    }
+    window.onscroll = ()=>{
+      this.scrollY > 20 ? navbar.classList.add("sticky") : navbar.classList.remove("sticky");
+    }
+  </script>
+</body>
+</html>

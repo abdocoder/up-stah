@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<!-- Created By CodingNepal - www.codingnepalweb.com -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About APK</title>
+   <link rel="shortcut icon" href="image/png.png" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="content">
+      <div class="logo">
+        <a href="index.html">UP-STAH</a>
+      </div>
+      <ul class="menu-list">
+        <div class="icon cancel-btn">
+          <i class="fas fa-times"></i>
+        </div>
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="about apk.html">About APK</a></li>
+        <li><a href="separation.html">Séparation</a></li>
+        <li><a href="stockage.html">Stockage</a></li>
+      </ul>
+      <div class="icon menu-btn">
+        <i class="fas fa-bars"></i>
+      </div>
+    </div>
+  </nav>
+  <div class="banner"></div>
+  <div class="about">
+    <div class="content">
+      <div class="title"> About UP-STAH APK</div>
+  <p> Le téléchargement est seulement à partir de cette application </p>
+  <p>Tout mise à jour sera publiée ici</p>
+<p>L'application n'est pas dans Play Store cela vous réceptionné un affichage d'un alert de Google Play</p>
+
+    </div>
+  </div>
+  <div class="about">
+    <div class="content">
+      <div class="title"> DOWNLOAD APK or UPDATE </div>
+  <p> l'application est à jour <br>  Pas mise à jour pour le moment.... </p>
+    </div>
+  </div>
+ 
+
+  <script>
+    const body = document.querySelector("body");
+    const navbar = document.querySelector(".navbar");
+    const menuBtn = document.querySelector(".menu-btn");
+    const cancelBtn = document.querySelector(".cancel-btn");
+    menuBtn.onclick = ()=>{
+      navbar.classList.add("show");
+      menuBtn.classList.add("hide");
+      body.classList.add("disabled");
+    }
+    cancelBtn.onclick = ()=>{
+      body.classList.remove("disabled");
+      navbar.classList.remove("show");
+      menuBtn.classList.remove("hide");
+    }
+    window.onscroll = ()=>{
+      this.scrollY > 20 ? navbar.classList.add("sticky") : navbar.classList.remove("sticky");
+    }
+  </script>
+</body>
+</html>
