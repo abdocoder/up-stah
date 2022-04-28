@@ -1,20 +1,95 @@
 <!DOCTYPE html>
+<!-- Created By CodingNepal - www.codingnepalweb.com -->
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>my shop</title>
-    <link rel="shortcut icon" href="images/logo1.png" type="image/x-icon">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
+    <title>UP-STAH</title>
+   <link rel="shortcut icon" href="image/png.png" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
-   
 </head>
 <body>
-  <div class="canvalogo">
-    <img src="images/logo.png" alt="">
+  <nav class="navbar">
+    <div class="content">
+      <div class="logo">
+        <a href="index.html">UP-STAH</a>
+      </div>
+      <ul class="menu-list">
+        <div class="icon cancel-btn">
+          <i class="fas fa-times"></i>
+        </div>
+        <li><a href="index.html">HOME</a></li>
+        <li><a href="#">About APK</a></li>
+        <li><a href="separation.html">Séparation</a></li>
+        <li><a href="stockage.html">Stockage</a></li>
+      </ul>
+      <div class="icon menu-btn">
+        <i class="fas fa-bars"></i>
+      </div>
+    </div>
+  </nav>
+  <div class="banner"></div>
+  <div class="about">
+    <div class="content">
+      <div class="title"> le champ de STAH</div>
+      <p>Le champ de STAH est un champ producteur d'huile. Comporte une unité de traitement ou séparation de brut et achemine vers les bacs de stockages R1, R2 ou R3, et une station de récupération des gaz associés.
+    </p>
+    <p>Les stations de compression STAH/MRK sont conçues pour comprimer et déshydrater les gaz associés provenant des unités de séparation.
+Les gaz provenant de unité de séparation STAH sont des différance pression que alimenté la station de compression.
+        </p>
+
+    </div>
+  </div>
+  <div class="about">
+    <div class="content">
+      <div class="title"> Gisement de STAH</div>
+    <p>Il a été découvert en septembre 1971 par le puits STAH -1 bis. Il a deux réservoirs principaux F3 et F6.Mis en production en juin 1975.Les dimensions du champ sont de 13km sur 7.5km.
+        Le réservoir F3 est un anneau d'huile (43m) compris entre un gas-cap et un aquifère faiblement actif, de profondeur moyenne : 2700m
+        Le réservoir F6 est un anneau d'huile (26m) compris entre un large gas-cap et un aquifère fortement actif de profondeur moyenne 2850m. 
+        Dans le champ de SATH le mélange de l'eau de deux formation F6 et F3 provoque la formation de sulfate de baryum est un oxyde solide, cristallin, blanc de formule chimique BaSO4. Il est insoluble dans l'eau et d'autres solvants classiques, mais est soluble légèrement dans l'acide sulfurique concentré. 
+        </p>
+        <p>
+            L'unité de traitement de STAH est alimentée par quatre  (04) manifolds au niveau du champ de STAH,
+            Le rôle de cette unité de traitement est de traiter le pétrole brut à partir de séparer entre le gaz, le brut et l'eau.
+            </p>
+            <p>
+                L'unité de séparation contient quatre (04) batterie, trois (03) de production et une (01) utilisé pour le test des puits et un séparateur pour les puits MP (MP4).
+                </p>
+                <div class="title"> réseaux de collectes(Manifold)</div>
+                <p>Ce terme désigne l'ensemble des conduites et des accessoires affectés à transporter des effluents bruts entre les puits producteurs et le centre de traitement.
+                    Sur le champ de STAH on rencontre deux types de liaisons de collecte</p>
+                    <p>
+                        Où les puits sont relier individuellement au centre de traitement par une ligne de 4 pouce comme le cas de (ST 2-15) dans la partie 4 pouce de manifold d’entrée .Ce type de liaison offre d’importants avantages technique :
+             ⦁	identification direct des puits en service ou non sur le centre de traitement.
+             ⦁	Rapidité de passage d'un puits en test.
+             </p>
+             <p>Liaisons par collecteurs:
+                Sur le champ de STAH les puits sont presque tous raccordes aux trois manifolds A, B et C pour que ces derniers soient réalises, il à été choisir sur le terrain un ou plusieurs point de groupement les lignes individuelles des puits. Ces points sont pris de telle façon que les lignes
+       </p>
+       <p>soient les plus courtes possible. Ensuite les effluents sont acheminés mélangés par un seul collecteur unique de capacité convenable vers les différentes parties de manifold d’entrée 10”, 8” ou 4”.
+    </p>
+    </div>
   </div>
 
+  <script>
+    const body = document.querySelector("body");
+    const navbar = document.querySelector(".navbar");
+    const menuBtn = document.querySelector(".menu-btn");
+    const cancelBtn = document.querySelector(".cancel-btn");
+    menuBtn.onclick = ()=>{
+      navbar.classList.add("show");
+      menuBtn.classList.add("hide");
+      body.classList.add("disabled");
+    }
+    cancelBtn.onclick = ()=>{
+      body.classList.remove("disabled");
+      navbar.classList.remove("show");
+      menuBtn.classList.remove("hide");
+    }
+    window.onscroll = ()=>{
+      this.scrollY > 20 ? navbar.classList.add("sticky") : navbar.classList.remove("sticky");
+    }
+  </script>
 </body>
 </html>
