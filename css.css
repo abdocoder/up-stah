@@ -1,23 +1,25 @@
-.slideshow {
-  height: 400px;
-  overflow: hidden;
-  position: relative;
-}
+.button-container {
 
-.slides {
   display: flex;
-  height: 100%;
-  position: relative;
-  transition: 1s;
-  width: 400%;
+
+  flex-direction: column;
+
+  align-items: center;
+
 }
 
-.slides img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+.awesome-button {
 
-.slides img:first-child {
-  position: relative;
-}
+  padding: 10px 20px;
+
+  font-size: 20px;
+
+  color: #fff;
+
+  background-color: #4CAF50;
+
+  border: none;
+
+  border-radius: 10px;
+
+  cursor: pointer;
