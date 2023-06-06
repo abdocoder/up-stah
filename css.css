@@ -1,25 +1,54 @@
-.button-container {
+body {
 
-  display: flex;
+    font-family: Arial, sans-serif;
 
-  flex-direction: column;
+    background-color: #f4f4f4;
 
-  align-items: center;
+    margin: 0;
+
+    padding: 0;
 
 }
 
-.awesome-button {
+h1 {
 
-  padding: 10px 20px;
+    text-align: center;
 
-  font-size: 20px;
+    padding: 20px;
 
-  color: #fff;
+}
 
-  background-color: #4CAF50;
+.gallery {
 
-  border: none;
+    display: grid;
 
-  border-radius: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
 
-  cursor: pointer;
+    gap: 20px;
+
+    padding: 20px;
+
+}
+
+.photo {
+
+    background-color: #fff;
+
+    padding: 10px;
+
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+    text-align: center;
+
+}
+
+.photo img {
+
+    max-width: 100%;
+
+    height: auto;
+
+}
+
+
+
