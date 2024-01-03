@@ -41,7 +41,7 @@
         .result {
             margin-top: 10px;
             font-size: 22px;
-            color: red; /* Green color */
+            color: #00FF00; /* Green color */
         }
     </style>
 </head>
@@ -135,10 +135,10 @@
                     let formattedNewTime = newHours.toString().padStart(2, '0') + ':' +
                         newMinutes.toString().padStart(2, '0');
 
-                    // Display the time exactly
-                    resultElement.innerHTML += `<br>Time Exactly: ${formattedNewTime}`;
+                    // Display the time exactly using alert
+                    alert(`Apres: ${result.toFixed(2)} h\nTime Exactly: ${formattedNewTime}`);
                 } else {
-                    document.getElementById('result').innerText = 'Please enter a valid time in HH:mm format.';
+                    alert('Please enter a valid time in HH:mm format.');
                 }
             }
         </script>
