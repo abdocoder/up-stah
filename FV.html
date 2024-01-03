@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Operation Calculator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+
+        .calculator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 400px;
+            margin: auto;
+        }
+
+        table {
+            margin-bottom: 20px;
+        }
+
+        input {
+            margin-bottom: 10px;
+            padding: 8px;
+            font-size: 16px;
+        }
+
+        button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #3498db;
+            color: #ffffff;
+            border: none;
+        }
+
+        .result {
+            margin-top: 10px;
+            font-size: 18px;
+            color: #00FF00; /* Green color */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <input type="number" id="inputCoteDV" placeholder="La Cote DV">
+        <input type="number" id="inputCoteEnCour" placeholder="La Cote en Cour">
+        <input type="number" id="inputTempsExpMarche" placeholder="Temps de EXP marche">
+        <input type="number" id="inputCoteFV" placeholder="La Cote FV">
+        <input type="time" id="inputTempsCoteEnCour" placeholder="Temps de la Cote en Cour">
+        
+        <table>
+            <tr>
+                <td>
+                    <button id="btnResults" onclick="calculateResults()">
+                        <i class="fas fa-calculator"></i> Results
+                    </button>
+                </td>
+            </tr>
+        </table>
+
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        // Load savedNumber from localStorage on page load
+        let savedNumber = localStorage.getItem('savedNumber');
+
+        function saveNow() {
+            let inputCoteEnCour = document.getElementById('inputCoteEnCour').value;
+            savedNumber = parseFloat(inputCoteEnCour);
+            localStorage.setItem('savedNumber', savedNumber); // Save to localStorage
+            alert('Number saved successfully!');
+        }
+
+        function replaySaved() {
+            if (savedNumber !== null) {
+                document.getElementById('inputCoteEnCour').value = savedNumber;
+                alert('Replayed saved number!');
+            } else {
+                alert('No number saved yet.');
+            }
+        }
+
+        function calculateResults() {
+            let inputCoteDV = document.getElementById('inputCoteDV').value;
+            let inputCoteEnCour = document.getElementById('inputCoteEnCour').value;
+            let inputTempsExpMarche = document.getElementById('inputTempsExpMarche').value;
+            let inputCoteFV = document.getElementById('inputCoteFV').value;
+
+            // Convert inputs to numbers
+            let coteDV = parseFloat(inputCoteDV);
+            let coteEnCour = parseFloat(inputCoteEnCour);
+            let tempsExpMarche = parseFloat(inputTempsExpMarche);
+            let coteFV = parseFloat(inputCoteFV);
+
+            // Check if inputs are valid numbers
+            if (isNaN(coteDV) || isNaN(coteEnCour) || isNaN(tempsExpMarche) || isNaN(coteFV)) {
+                alert('Please enter valid numbers.');
+                return;
+            }
+
+            // Perform the calculation for results
+            let result = (coteEnCour - coteFV) / ((coteDV - coteEnCour) / tempsExpMarche);
+
+            // Display the result
+            let resultElement = document.getElementById('result');
+            resultElement.innerHTML = `Apres: ${result.toFixed(2)} h`;
+
+            // Save the result to local storage
+            localStorage.setItem('result', result.toFixed(2));
+
+            // Add the result to "Temps de la Cote en Cour" as hours and minutes
+            let inputTempsCoteEnCour = document.getElementById('inputTempsCoteEnCour').value;
+            let inputTimeArray = inputTempsCoteEnCour.split(":");
+            if (inputTimeArray.length === 2 && !isNaN(inputTimeArray[0]) && !isNaN(inputTimeArray[1])) {
+                let hoursResult = Math.floor(result);
+                let minutesResult = Math.round((result - hoursResult) * 60);
+
+                // Add the result to the input time
+                let newHours = parseInt(inputTimeArray[0]) + hoursResult;
+                let newMinutes = parseInt(inputTimeArray[1]) + minutesResult;
+
+                // Adjust hours and minutes
+                if (newMinutes >= 60) {
+                    newHours += Math.floor(newMinutes / 60);
+                    newMinutes %= 60;
+                }
+
+                // Format the new time as HH:mm
+                let formattedNewTime = newHours.toString().padStart(2, '0') + ':' +
+                    newMinutes.toString().padStart(2, '0');
+
+                // Display the time exactly
+                resultElement.innerHTML += `<br>Time Exactly: ${formattedNewTime}`;
+
+                // Alert notification
+                alert(`Apres: ${result.toFixed(2)} h\nTime Exactly: ${formattedNewTime}`);
+            } else {
+                alert('Please enter a valid time in HH:mm format.');
+            }
+        }
+    </script>
+
+</body>
+</html>
