@@ -157,11 +157,6 @@
             box-shadow: 0 0 0 3px rgba(33,150,243,0.1);
         }
 
-        input[readonly] {
-            background: #f5f5f5;
-            color: #666;
-        }
-
         /* Buttons */
         .button-group {
             display: grid;
@@ -389,25 +384,25 @@
             <div class="coeff" id="coeffDisplay">Coefficient: 0.452</div>
         </div>
 
-        <!-- Input Cards -->
+        <!-- Input Cards - OLD is now editable -->
         <div class="card">
             <div class="input-group">
                 <div class="input-label now">NOW</div>
-                <input type="number" id="nowInput" placeholder="Niveau actuel (m³)" step="any">
+                <input type="number" id="nowInput" placeholder="Niveau actuel (m³)" step="any" inputmode="decimal">
             </div>
         </div>
 
         <div class="card">
             <div class="input-group">
                 <div class="input-label old">OLD</div>
-                <input type="text" id="oldInput" readonly placeholder="Niveau précédent (m³)">
+                <input type="number" id="oldInput" placeholder="Niveau précédent (m³)" step="any" inputmode="decimal">
             </div>
         </div>
 
         <div class="card">
             <div class="input-group">
                 <div class="input-label time">TIME</div>
-                <input type="number" id="timeInput" placeholder="Temps écoulé (heures)" step="any">
+                <input type="number" id="timeInput" placeholder="Temps écoulé (heures)" step="any" inputmode="decimal">
             </div>
         </div>
 
@@ -469,6 +464,16 @@
                 document.getElementById('oldInput').value = savedOld;
             }
             
+            const savedNow = localStorage.getItem('nowValue');
+            if (savedNow) {
+                document.getElementById('nowInput').value = savedNow;
+            }
+            
+            const savedTime = localStorage.getItem('timeValue');
+            if (savedTime) {
+                document.getElementById('timeInput').value = savedTime;
+            }
+            
             const savedHistory = localStorage.getItem('history');
             if (savedHistory) {
                 history = JSON.parse(savedHistory);
@@ -480,6 +485,8 @@
         function saveData() {
             localStorage.setItem('selectedTank', currentTank);
             localStorage.setItem('oldValue', document.getElementById('oldInput').value);
+            localStorage.setItem('nowValue', document.getElementById('nowInput').value);
+            localStorage.setItem('timeValue', document.getElementById('timeInput').value);
             localStorage.setItem('history', JSON.stringify(history));
         }
 
@@ -511,12 +518,12 @@
         // Calculate flow rate
         function calculateFlow() {
             const nowInput = document.getElementById('nowInput');
-            const timeInput = document.getElementById('timeInput');
             const oldInput = document.getElementById('oldInput');
+            const timeInput = document.getElementById('timeInput');
             
             const now = parseFloat(nowInput.value);
-            const time = parseFloat(timeInput.value);
             const old = parseFloat(oldInput.value) || 0;
+            const time = parseFloat(timeInput.value);
             
             if (isNaN(now)) {
                 showToast('❌ Veuillez entrer la valeur NOW');
@@ -579,7 +586,7 @@
             if (navigator.vibrate) navigator.vibrate(50);
         }
         
-        // Reset for next measurement
+        // Reset for next measurement (copies NOW to OLD)
         function resetForNext() {
             const nowInput = document.getElementById('nowInput');
             const oldInput = document.getElementById('oldInput');
@@ -587,7 +594,7 @@
             const resultCard = document.getElementById('resultCard');
             
             // Copy NOW to OLD
-            if (nowInput.value) {
+            if (nowInput.value && nowInput.value !== '') {
                 oldInput.value = nowInput.value;
             }
             
@@ -599,7 +606,7 @@
             resultCard.classList.remove('show');
             
             saveData();
-            showToast('🔄 Prêt pour la prochaine mesure');
+            showToast('🔄 NOW copié vers OLD - Prêt pour la prochaine mesure');
             
             // Focus on NOW input
             nowInput.focus();
@@ -622,7 +629,7 @@
                     <div class="history-time">📅 ${entry.timestamp}</div>
                     <div class="history-details">
                         <span>${entry.tank}</span>
-                        <span>${entry.flowRate.toFixed(2)} m³/h</span>
+                        <span><strong>${entry.flowRate.toFixed(2)} m³/h</strong></span>
                     </div>
                     <div class="history-details" style="font-size: 10px; margin-top: 4px;">
                         <span>NOW: ${entry.now.toFixed(2)}</span>
@@ -637,57 +644,4 @@
         function clearHistory() {
             if (confirm('Effacer tout l\'historique ?')) {
                 history = [];
-                updateHistoryDisplay();
-                saveData();
-                showToast('🗑️ Historique effacé');
-                if (navigator.vibrate) navigator.vibrate(30);
-            }
-        }
-        
-        // Event listeners
-        function setupEventListeners() {
-            // Tank selection
-            document.querySelectorAll('.tank-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    currentTank = btn.dataset.tank;
-                    updateTankSelection();
-                    saveData();
-                    showToast(`✅ ${btn.textContent} sélectionné`);
-                    
-                    // Animation
-                    btn.style.transform = 'scale(0.95)';
-                    setTimeout(() => { btn.style.transform = ''; }, 150);
-                    
-                    if (navigator.vibrate) navigator.vibrate(20);
-                });
-            });
-            
-            // Calculate button
-            document.getElementById('calculateBtn').addEventListener('click', calculateFlow);
-            
-            // Reset button
-            document.getElementById('resetBtn').addEventListener('click', resetForNext);
-            
-            // Clear history
-            document.getElementById('clearHistoryBtn').addEventListener('click', clearHistory);
-            
-            // Enter key support
-            const inputs = ['nowInput', 'timeInput'];
-            inputs.forEach(id => {
-                document.getElementById(id).addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') calculateFlow();
-                });
-            });
-        }
-        
-        // Initialize
-        loadData();
-        setupEventListeners();
-        
-        // Save on beforeunload
-        window.addEventListener('beforeunload', () => {
-            saveData();
-        });
-    </script>
-</body>
-</html>
+                updateHis
