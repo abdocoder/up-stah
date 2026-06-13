@@ -237,6 +237,7 @@
 
         .result-card.show {
             display: block;
+            animation: slideUp 0.3s ease;
         }
 
         .result-line {
@@ -269,77 +270,15 @@
         .flow-medium { color: #FF9800; }
         .flow-high { color: #F44336; }
 
-        /* History */
-        .history-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .clear-btn {
-            background: none;
-            border: none;
-            color: #F44336;
-            font-size: 14px;
-            cursor: pointer;
-            padding: 5px 10px;
-        }
-
-        .history-list {
-            max-height: 250px;
-            overflow-y: auto;
-        }
-
-        .history-item {
-            background: #f5f5f5;
-            border-radius: 12px;
-            padding: 10px;
-            margin-bottom: 8px;
-            cursor: pointer;
-        }
-
-        .history-item:hover {
-            background: #e0e0e0;
-        }
-
-        .history-time {
-            font-size: 10px;
-            color: #2196F3;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .history-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 5px;
-        }
-
-        .history-tank {
-            font-size: 12px;
-            font-weight: bold;
-            padding: 2px 8px;
-            border-radius: 10px;
-            background: #ddd;
-        }
-
-        .history-flow {
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .history-detail {
-            font-size: 10px;
-            color: #999;
-            margin-top: 5px;
-        }
-
-        .empty-history {
-            text-align: center;
-            color: #999;
-            padding: 30px;
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         /* Toast message */
@@ -451,17 +390,6 @@
             <span class="flow-value" id="flowValue">0.000 m³/h</span>
         </div>
     </div>
-
-    <!-- History -->
-    <div class="card">
-        <div class="history-header">
-            <div class="card-title">📋 HISTORIQUE</div>
-            <button class="clear-btn" id="clearHistoryBtn">🗑️ Effacer tout</button>
-        </div>
-        <div class="history-list" id="historyList">
-            <div class="empty-history">Aucun calcul effectué</div>
-        </div>
-    </div>
 </div>
 
 <div class="toast" id="toastMsg">Message</div>
@@ -475,8 +403,15 @@
         R4: 0.050
     };
 
+    // Default values for each tank (NOW, OLD, TIME)
+    var defaultValues = {
+        R1: { now: 2000, old: 1850, time: 24 },
+        R2: { now: 1800, old: 1650, time: 24 },
+        R3: { now: 1200, old: 1100, time: 24 },
+        R4: { now: 900, old: 850, time: 24 }
+    };
+
     var currentTank = "R1";
-    var history = [];
 
     // Show toast message
     function showMessage(msg) {
@@ -493,6 +428,17 @@
         var body = document.body;
         body.className = "";
         body.classList.add("bg-" + currentTank.toLowerCase());
+    }
+
+    // Load default values for selected tank
+    function loadTankDefaults() {
+        var defaults = defaultValues[currentTank];
+        document.getElementById("nowInput").value = defaults.now;
+        document.getElementById("oldInput").value = defaults.old;
+        document.getElementById("timeInput").value = defaults.time;
+        
+        // Also save to localStorage
+        saveData();
     }
 
     // Update tank UI
@@ -512,112 +458,57 @@
         document.getElementById("selectedCoeff").textContent = "Coefficient: " + coefficients[currentTank].toFixed(3);
         
         changeBackground();
+        
+        // Load default values for this tank
+        loadTankDefaults();
+        
+        // Hide result card when switching tanks
+        document.getElementById("resultCard").classList.remove("show");
     }
 
-    // Save all data
+    // Save data to localStorage
     function saveData() {
         var nowVal = document.getElementById("nowInput").value;
         var oldVal = document.getElementById("oldInput").value;
         var timeVal = document.getElementById("timeInput").value;
         
         localStorage.setItem("selectedTank", currentTank);
-        localStorage.setItem("nowValue", nowVal);
-        localStorage.setItem("oldValue", oldVal);
-        localStorage.setItem("timeValue", timeVal);
-        localStorage.setItem("historyData", JSON.stringify(history));
+        localStorage.setItem("nowValue_" + currentTank, nowVal);
+        localStorage.setItem("oldValue_" + currentTank, oldVal);
+        localStorage.setItem("timeValue_" + currentTank, timeVal);
     }
 
-    // Load all data
+    // Load data from localStorage
     function loadData() {
         var savedTank = localStorage.getItem("selectedTank");
         if (savedTank && (savedTank === "R1" || savedTank === "R2" || savedTank === "R3" || savedTank === "R4")) {
             currentTank = savedTank;
-            updateTankUI();
         }
         
-        var savedNow = localStorage.getItem("nowValue");
+        // Try to load saved values for this tank, otherwise use defaults
+        var savedNow = localStorage.getItem("nowValue_" + currentTank);
+        var savedOld = localStorage.getItem("oldValue_" + currentTank);
+        var savedTime = localStorage.getItem("timeValue_" + currentTank);
+        
         if (savedNow && savedNow !== "") {
             document.getElementById("nowInput").value = savedNow;
+        } else {
+            document.getElementById("nowInput").value = defaultValues[currentTank].now;
         }
         
-        var savedOld = localStorage.getItem("oldValue");
         if (savedOld && savedOld !== "") {
             document.getElementById("oldInput").value = savedOld;
+        } else {
+            document.getElementById("oldInput").value = defaultValues[currentTank].old;
         }
         
-        var savedTime = localStorage.getItem("timeValue");
         if (savedTime && savedTime !== "") {
             document.getElementById("timeInput").value = savedTime;
+        } else {
+            document.getElementById("timeInput").value = defaultValues[currentTank].time;
         }
         
-        var savedHistory = localStorage.getItem("historyData");
-        if (savedHistory) {
-            history = JSON.parse(savedHistory);
-            updateHistoryDisplay();
-        }
-    }
-
-    // Update history display
-    function updateHistoryDisplay() {
-        var historyDiv = document.getElementById("historyList");
-        
-        if (history.length === 0) {
-            historyDiv.innerHTML = '<div class="empty-history">📭 Aucun calcul effectué</div>';
-            return;
-        }
-        
-        var html = "";
-        for (var i = 0; i < history.length; i++) {
-            var h = history[i];
-            var flowColor = "#4CAF50";
-            if (h.flowRate >= 100) flowColor = "#F44336";
-            else if (h.flowRate >= 50) flowColor = "#FF9800";
-            
-            html += '<div class="history-item" onclick="loadHistoryItem(' + i + ')">';
-            html += '<div class="history-time">📅 ' + h.timestamp + '</div>';
-            html += '<div class="history-row">';
-            html += '<span class="history-tank">' + h.tank + '</span>';
-            html += '<span class="history-flow" style="color: ' + flowColor + '">' + h.flowRate.toFixed(2) + ' m³/h</span>';
-            html += '</div>';
-            html += '<div class="history-detail">';
-            html += 'NOW: ' + h.now.toFixed(3) + 'm | OLD: ' + h.old.toFixed(3) + 'm | TIME: ' + h.time.toFixed(2) + 'h';
-            html += '</div></div>';
-        }
-        
-        historyDiv.innerHTML = html;
-    }
-
-    // Load history item to inputs
-    window.loadHistoryItem = function(index) {
-        if (history[index]) {
-            var item = history[index];
-            document.getElementById("nowInput").value = item.now;
-            document.getElementById("oldInput").value = item.old;
-            document.getElementById("timeInput").value = item.time;
-            showMessage("✅ Données chargées depuis l'historique");
-            saveData();
-        }
-    };
-
-    // Add to history
-    function addToHistory(tankName, now, old, time, flowRate) {
-        var nowDate = new Date();
-        var timestamp = nowDate.toLocaleString("fr-FR");
-        
-        var historyItem = {
-            timestamp: timestamp,
-            tank: tankName,
-            now: now,
-            old: old,
-            time: time,
-            flowRate: flowRate
-        };
-        
-        history.unshift(historyItem);
-        if (history.length > 20) history.pop();
-        
-        updateHistoryDisplay();
-        saveData();
+        updateTankUI();
     }
 
     // Calculate function
@@ -653,50 +544,44 @@
         // Show result card
         document.getElementById("resultCard").classList.add("show");
         
-        // Add to history
-        var tankNames = { R1: "BAC R1", R2: "BAC R2", R3: "BAC R3", R4: "BAC R4" };
-        addToHistory(tankNames[currentTank], now, old, time, flowRate);
+        // Save current values
+        saveData();
         
         showMessage("✅ Calcul effectué!");
         
         if (navigator.vibrate) navigator.vibrate(50);
     }
 
-    // Reset function
+    // Reset function - copies NOW to OLD and clears result
     function reset() {
         var nowInput = document.getElementById("nowInput");
         var oldInput = document.getElementById("oldInput");
         var timeInput = document.getElementById("timeInput");
         
-        if (nowInput.value !== "") {
+        // Copy NOW to OLD if NOW has a value
+        if (nowInput.value !== "" && nowInput.value !== null) {
             oldInput.value = nowInput.value;
         }
         
+        // Clear NOW and TIME
         nowInput.value = "";
         timeInput.value = "";
         
+        // Hide result card
         document.getElementById("resultCard").classList.remove("show");
         
+        // Save the new values
         saveData();
+        
         showMessage("🔄 NOW copié vers OLD - Prêt pour la prochaine mesure");
         
+        // Focus on NOW input
         nowInput.focus();
         
         if (navigator.vibrate) navigator.vibrate(30);
     }
 
-    // Clear history
-    function clearHistory() {
-        if (confirm("Effacer tout l'historique ?")) {
-            history = [];
-            updateHistoryDisplay();
-            saveData();
-            showMessage("🗑️ Historique effacé");
-            if (navigator.vibrate) navigator.vibrate(30);
-        }
-    }
-
-    // Auto save on input
+    // Auto save on input change
     function setupAutoSave() {
         var inputs = ["nowInput", "oldInput", "timeInput"];
         for (var i = 0; i < inputs.length; i++) {
@@ -717,7 +602,7 @@
                 updateTankUI();
                 saveData();
                 var tankName = this.querySelector(".tank-name").textContent;
-                showMessage("✅ " + tankName + " sélectionné");
+                showMessage("✅ " + tankName + " sélectionné avec valeurs par défaut");
                 if (navigator.vibrate) navigator.vibrate(20);
             });
         }
@@ -729,10 +614,6 @@
         // Reset button
         var resetBtn = document.getElementById("resetBtn");
         resetBtn.addEventListener("click", reset);
-        
-        // Clear history button
-        var clearBtn = document.getElementById("clearHistoryBtn");
-        clearBtn.addEventListener("click", clearHistory);
         
         // Enter key on inputs
         document.getElementById("nowInput").addEventListener("keypress", function(e) {
