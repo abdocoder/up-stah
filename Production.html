@@ -2,9 +2,11 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <meta name="theme-color" content="#2196F3">
-    <title>UP Flow Calculator - Calculateur de Débit</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#1a73e8">
+    <title>Débit Calculator - UP</title>
     <style>
         * {
             margin: 0;
@@ -14,168 +16,224 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 16px;
-            padding-bottom: 32px;
+            padding: 20px 16px 32px;
         }
 
-        .container {
-            max-width: 600px;
+        /* Main container */
+        .app-container {
+            max-width: 480px;
             margin: 0 auto;
         }
 
-        /* Header / Logo */
-        .header {
+        /* Header */
+        .app-header {
             text-align: center;
             margin-bottom: 24px;
-            animation: fadeInDown 0.6s ease-out;
         }
 
-        .logo {
+        .logo-container {
+            background: rgba(255,255,255,0.95);
             width: 70px;
             height: 70px;
-            background: white;
             border-radius: 20px;
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
-            font-weight: bold;
-            color: #2196F3;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            margin-bottom: 12px;
+            margin: 0 auto 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
 
-        h1 {
+        .logo-text {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .app-title {
             color: white;
-            font-size: 24px;
-            letter-spacing: 2px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 1px;
         }
 
-        .subtitle {
-            color: rgba(255,255,255,0.9);
-            font-size: 12px;
+        .app-subtitle {
+            color: rgba(255,255,255,0.85);
+            font-size: 13px;
             margin-top: 4px;
         }
 
-        /* Cards */
+        .formula-badge {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 8px;
+            font-size: 11px;
+            font-family: monospace;
+            color: white;
+        }
+
+        /* Tank Selection Card */
         .card {
             background: white;
-            border-radius: 24px;
+            border-radius: 28px;
             padding: 20px;
             margin-bottom: 16px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-            transition: transform 0.2s, box-shadow 0.2s;
-            animation: fadeInUp 0.5s ease-out;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
         }
 
-        .card:active {
-            transform: scale(0.99);
+        .card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a73e8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        /* Tank Selection */
-        .tank-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .tank-btn {
-            background: #f5f5f5;
-            border: 2px solid #e0e0e0;
-            padding: 12px;
-            border-radius: 16px;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-align: center;
-            color: #666;
-        }
-
-        .tank-btn.active {
-            background: linear-gradient(135deg, #2196F3, #1976D2);
-            border-color: #2196F3;
-            color: white;
-            box-shadow: 0 4px 12px rgba(33,150,243,0.3);
-        }
-
-        .selected-tank {
-            background: linear-gradient(135deg, #2196F3, #1976D2);
-            color: white;
-            padding: 12px;
-            border-radius: 16px;
-            text-align: center;
-            font-weight: bold;
-            margin-top: 12px;
+        .card-title span {
             font-size: 18px;
         }
 
-        .coeff {
+        /* Tank Grid */
+        .tank-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .tank-option {
+            background: #f8f9fa;
+            border: 2px solid #e8eaed;
+            border-radius: 20px;
+            padding: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
             text-align: center;
-            margin-top: 8px;
-            font-size: 14px;
-            color: #666;
+        }
+
+        .tank-option.active {
+            background: linear-gradient(135deg, #1a73e8, #0d47a1);
+            border-color: #1a73e8;
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(26,115,232,0.3);
+        }
+
+        .tank-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #202124;
+        }
+
+        .tank-option.active .tank-name {
+            color: white;
+        }
+
+        .tank-desc {
+            font-size: 11px;
+            color: #5f6368;
+            margin-top: 4px;
+        }
+
+        .tank-option.active .tank-desc {
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* Selected Tank Display */
+        .selected-tank-info {
+            background: #f0f7ff;
+            border-radius: 16px;
+            padding: 12px;
+            text-align: center;
+            margin-top: 12px;
+        }
+
+        .selected-tank-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1a73e8;
+        }
+
+        .coefficient-info {
+            font-size: 13px;
+            color: #5f6368;
+            margin-top: 4px;
         }
 
         /* Input Groups */
         .input-group {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
+            margin-bottom: 20px;
         }
 
         .input-label {
-            font-size: 28px;
-            font-weight: bold;
-            min-width: 80px;
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #202124;
         }
 
-        .input-label.now { color: #4CAF50; }
-        .input-label.old { color: #FF9800; }
-        .input-label.time { color: #9C27B0; }
+        .input-label .label-icon {
+            font-size: 20px;
+        }
 
-        input {
-            flex: 1;
-            padding: 14px 16px;
-            font-size: 18px;
-            border: 2px solid #e0e0e0;
-            border-radius: 16px;
-            outline: none;
+        .input-label .label-text {
+            font-size: 15px;
+        }
+
+        .input-label .label-unit {
+            font-size: 12px;
+            color: #5f6368;
+            font-weight: normal;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px;
+            font-size: 24px;
+            font-weight: 600;
+            border: 2px solid #e8eaed;
+            border-radius: 20px;
+            background: #f8f9fa;
             transition: all 0.2s;
-            background: #fafafa;
+            font-family: monospace;
+            text-align: center;
         }
 
-        input:focus {
-            border-color: #2196F3;
+        .input-field:focus {
+            outline: none;
+            border-color: #1a73e8;
             background: white;
-            box-shadow: 0 0 0 3px rgba(33,150,243,0.1);
+            box-shadow: 0 0 0 3px rgba(26,115,232,0.1);
         }
 
-        input[readonly] {
-            background: #f5f5f5;
-            color: #666;
-        }
-
-        /* Buttons */
+        /* Button Group */
         .button-group {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
             gap: 12px;
             margin-bottom: 16px;
         }
 
         .btn {
+            flex: 1;
             padding: 16px;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 600;
             border: none;
-            border-radius: 16px;
+            border-radius: 28px;
             cursor: pointer;
             transition: all 0.2s;
             display: flex;
@@ -185,96 +243,93 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #2196F3, #1976D2);
+            background: linear-gradient(135deg, #1a73e8, #0d47a1);
             color: white;
-            box-shadow: 0 4px 12px rgba(33,150,243,0.3);
+            box-shadow: 0 4px 12px rgba(26,115,232,0.3);
         }
 
         .btn-primary:active {
             transform: scale(0.97);
-            box-shadow: 0 2px 6px rgba(33,150,243,0.3);
+            box-shadow: 0 2px 6px rgba(26,115,232,0.3);
         }
 
         .btn-secondary {
             background: white;
-            color: #666;
-            border: 2px solid #e0e0e0;
+            color: #5f6368;
+            border: 2px solid #e8eaed;
         }
 
         .btn-secondary:active {
             transform: scale(0.97);
-            background: #f5f5f5;
+            background: #f8f9fa;
         }
 
         /* Result Card */
         .result-card {
-            background: linear-gradient(135deg, #E3F2FD, #BBDEFB);
-            border-radius: 24px;
+            background: linear-gradient(135deg, #e8f0fe, #d2e3fc);
+            border-radius: 28px;
             padding: 20px;
-            margin-top: 8px;
+            margin-bottom: 16px;
             display: none;
-            animation: slideUp 0.4s ease-out;
         }
 
         .result-card.show {
             display: block;
+            animation: slideUp 0.3s ease;
         }
 
-        .result-title {
-            font-size: 14px;
-            font-weight: bold;
-            color: #1976D2;
+        .result-header {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1a73e8;
             text-transform: uppercase;
-            letter-spacing: 1px;
             margin-bottom: 12px;
         }
 
-        .result-row {
+        .result-line {
             display: flex;
             justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
+            align-items: baseline;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.08);
         }
 
-        .result-row:last-child {
+        .result-line:last-child {
             border-bottom: none;
         }
 
         .result-label {
-            font-size: 16px;
-            color: #333;
+            font-size: 14px;
+            color: #3c4043;
         }
 
         .result-value {
-            font-size: 20px;
-            font-weight: bold;
+            font-size: 24px;
+            font-weight: 700;
         }
 
-        .flow-rate {
-            font-size: 28px;
-            font-weight: bold;
+        .flow-value {
+            font-size: 32px;
+            font-weight: 800;
         }
 
-        .flow-low { color: #4CAF50; }
-        .flow-medium { color: #FF9800; }
-        .flow-high { color: #F44336; }
+        .flow-low { color: #34a853; }
+        .flow-medium { color: #f9ab00; }
+        .flow-high { color: #ea4335; }
 
-        /* History */
-        .history-card {
-            background: white;
-            border-radius: 24px;
-            padding: 20px;
-            margin-top: 16px;
-        }
-
-        .history-title {
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 12px;
+        /* History Section */
+        .history-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .history-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1a73e8;
+            text-transform: uppercase;
         }
 
         .clear-history {
@@ -283,48 +338,76 @@
             font-size: 20px;
             cursor: pointer;
             padding: 4px 8px;
-            border-radius: 8px;
-            color: #999;
+            border-radius: 12px;
+            color: #ea4335;
         }
 
         .history-list {
-            max-height: 300px;
+            max-height: 280px;
             overflow-y: auto;
         }
 
         .history-item {
-            background: #f9f9f9;
+            background: #f8f9fa;
+            border-radius: 16px;
             padding: 12px;
-            border-radius: 12px;
             margin-bottom: 8px;
-            font-size: 12px;
+            transition: all 0.2s;
         }
 
         .history-time {
-            color: #2196F3;
-            font-weight: bold;
-            margin-bottom: 4px;
+            font-size: 11px;
+            color: #1a73e8;
+            font-weight: 600;
+            margin-bottom: 6px;
         }
 
-        .history-details {
+        .history-row {
             display: flex;
             justify-content: space-between;
-            color: #666;
+            align-items: center;
+            margin-top: 6px;
         }
 
-        /* Animations */
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .history-tank {
+            font-size: 12px;
+            font-weight: 600;
+            color: #5f6368;
         }
 
-        @keyframes fadeInUp {
+        .history-flow {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .history-detail {
+            font-size: 10px;
+            color: #9aa0a6;
+            margin-top: 4px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(10px);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            transition: transform 0.3s;
+            z-index: 1000;
+            white-space: nowrap;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+
+        @keyframes slideUp {
             from {
                 opacity: 0;
                 transform: translateY(20px);
@@ -335,341 +418,405 @@
             }
         }
 
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: rgba(0,0,0,0.8);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 50px;
-            font-size: 14px;
-            transition: transform 0.3s;
-            z-index: 1000;
-            pointer-events: none;
-        }
-
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
+        /* Empty state */
+        .empty-history {
+            text-align: center;
+            color: #9aa0a6;
+            padding: 32px;
+            font-size: 13px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="logo">UP</div>
-            <h1>FLOW CALCULATOR</h1>
-            <div class="subtitle">Calculateur de Débit</div>
+<div class="app-container">
+    <!-- Header -->
+    <div class="app-header">
+        <div class="logo-container">
+            <div class="logo-text">UP</div>
         </div>
+        <div class="app-title">Débit Calculator</div>
+        <div class="app-subtitle">Calculateur de Débit Professionnel</div>
+        <div class="formula-badge">Q = (NOW - OLD) × Coeff / TIME</div>
+    </div>
 
-        <!-- Tank Selection Card -->
-        <div class="card">
-            <div style="font-weight: bold; margin-bottom: 12px; color: #2196F3;">CHOISIR LE RÉSERVOIR</div>
-            <div class="tank-grid" id="tankGrid">
-                <div class="tank-btn active" data-tank="R1">BAC R1</div>
-                <div class="tank-btn" data-tank="R2">BAC R2</div>
-                <div class="tank-btn" data-tank="R3">BAC R3</div>
-                <div class="tank-btn" data-tank="R4">BAC R4</div>
+    <!-- Tank Selection -->
+    <div class="card">
+        <div class="card-title">
+            <span>🎯</span> CHOISIR LE RÉSERVOIR
+        </div>
+        <div class="tank-grid" id="tankGrid">
+            <div class="tank-option active" data-tank="R1">
+                <div class="tank-name">BAC R1</div>
+                <div class="tank-desc">Réservoir 1</div>
             </div>
-            <div class="selected-tank" id="selectedTank">BAC R1</div>
-            <div class="coeff" id="coeffDisplay">Coefficient: 0.452</div>
-        </div>
-
-        <!-- Input Cards -->
-        <div class="card">
-            <div class="input-group">
-                <div class="input-label now">NOW</div>
-                <input type="number" id="nowInput" placeholder="Niveau actuel (m³)" step="any">
+            <div class="tank-option" data-tank="R2">
+                <div class="tank-name">BAC R2</div>
+                <div class="tank-desc">Réservoir 2</div>
             </div>
-        </div>
-
-        <div class="card">
-            <div class="input-group">
-                <div class="input-label old">OLD</div>
-                <!-- FIXED: Removed readonly and changed type to number -->
-                <input type="number" id="oldInput" placeholder="Niveau précédent (m³)" step="any">
+            <div class="tank-option" data-tank="R3">
+                <div class="tank-name">BAC R3</div>
+                <div class="tank-desc">Réservoir 3</div>
+            </div>
+            <div class="tank-option" data-tank="R4">
+                <div class="tank-name">BAC R4</div>
+                <div class="tank-desc">Réservoir 4</div>
             </div>
         </div>
-
-        <div class="card">
-            <div class="input-group">
-                <div class="input-label time">TIME</div>
-                <input type="number" id="timeInput" placeholder="Temps écoulé (heures)" step="any">
-            </div>
-        </div>
-
-        <!-- Buttons -->
-        <div class="button-group">
-            <button class="btn btn-primary" id="calculateBtn">🧮 CALCULER</button>
-            <button class="btn btn-secondary" id="resetBtn">↺ RÉINITIALISER</button>
-        </div>
-
-        <!-- Result Card -->
-        <div class="result-card" id="resultCard">
-            <div class="result-title">RÉSULTATS</div>
-            <div class="result-row">
-                <span class="result-label">Différence (m³):</span>
-                <span class="result-value" id="differenceValue">0.000</span>
-            </div>
-            <div class="result-row">
-                <span class="result-label">Débit (m³/h):</span>
-                <span class="flow-rate" id="flowRateValue">0.000</span>
-            </div>
-        </div>
-
-        <!-- History Card -->
-        <div class="history-card">
-            <div class="history-title">
-                <span>📋 HISTORIQUE</span>
-                <button class="clear-history" id="clearHistoryBtn" title="Effacer l'historique">🗑️</button>
-            </div>
-            <div class="history-list" id="historyList">
-                <div style="text-align: center; color: #999; padding: 20px;">Aucun calcul effectué</div>
-            </div>
+        <div class="selected-tank-info" id="selectedInfo">
+            <div class="selected-tank-name" id="selectedTankName">BAC R1</div>
+            <div class="coefficient-info" id="coeffDisplay">Coefficient: 0.450</div>
         </div>
     </div>
 
-    <div class="toast" id="toast">Message</div>
+    <!-- Input Section -->
+    <div class="card">
+        <div class="card-title">
+            <span>📊</span> SAISIE DES MESURES
+        </div>
 
-    <script>
-        // Tank coefficients
-        const coefficients = {
-            R1: 0.452,
-            R2: 0.468,
-            R3: 0.485,
-            R4: 0.502
-        };
+        <div class="input-group">
+            <div class="input-label">
+                <span class="label-icon">🟢</span>
+                <span class="label-text">Niveau Actuel (NOW)</span>
+                <span class="label-unit">mètres</span>
+            </div>
+            <input type="number" id="nowInput" class="input-field" placeholder="0.000" step="any" value="">
+        </div>
 
-        let currentTank = 'R1';
-        let history = [];
+        <div class="input-group">
+            <div class="input-label">
+                <span class="label-icon">🟠</span>
+                <span class="label-text">Niveau Précédent (OLD)</span>
+                <span class="label-unit">mètres</span>
+            </div>
+            <input type="number" id="oldInput" class="input-field" placeholder="0.000" step="any" value="">
+        </div>
 
-        // Load saved data
-        function loadData() {
-            const savedTank = localStorage.getItem('selectedTank');
-            if (savedTank) {
+        <div class="input-group">
+            <div class="input-label">
+                <span class="label-icon">⏱️</span>
+                <span class="label-text">Temps Écoulé</span>
+                <span class="label-unit">heures</span>
+            </div>
+            <input type="number" id="timeInput" class="input-field" placeholder="0.00" step="any" value="">
+        </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="button-group">
+        <button class="btn btn-primary" id="calculateBtn">🧮 CALCULER</button>
+        <button class="btn btn-secondary" id="resetBtn">↺ RÉINITIALISER</button>
+    </div>
+
+    <!-- Result -->
+    <div class="result-card" id="resultCard">
+        <div class="result-header">RÉSULTAT DU CALCUL</div>
+        <div class="result-line">
+            <span class="result-label">Différence (Δh) :</span>
+            <span class="result-value" id="differenceValue">0.000 m</span>
+        </div>
+        <div class="result-line">
+            <span class="result-label">Débit (Q) :</span>
+            <span class="flow-value" id="flowRateValue">0.000 m³/h</span>
+        </div>
+    </div>
+
+    <!-- History -->
+    <div class="card">
+        <div class="history-header">
+            <div class="history-title">📋 HISTORIQUE DES CALCULS</div>
+            <button class="clear-history" id="clearHistoryBtn" title="Effacer tout">🗑️ Effacer tout</button>
+        </div>
+        <div class="history-list" id="historyList">
+            <div class="empty-history">Aucun calcul effectué</div>
+        </div>
+    </div>
+</div>
+
+<div class="toast" id="toast">Message</div>
+
+<script>
+    // Coefficients EXACTLY as specified
+    // R1 = 0.450, R2 = 0.452, R3 = 0.452, R4 = 0.05
+    var coefficients = {
+        R1: 0.450,
+        R2: 0.452,
+        R3: 0.452,
+        R4: 0.05
+    };
+
+    var currentTank = 'R1';
+    var history = [];
+
+    // Helper: Show toast message
+    function showToast(msg) {
+        var toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(function() {
+            toast.classList.remove('show');
+        }, 2000);
+    }
+
+    // Update tank UI
+    function updateTankUI() {
+        var tanks = document.querySelectorAll('.tank-option');
+        for (var i = 0; i < tanks.length; i++) {
+            var tank = tanks[i];
+            if (tank.getAttribute('data-tank') === currentTank) {
+                tank.classList.add('active');
+            } else {
+                tank.classList.remove('active');
+            }
+        }
+        
+        var tankNames = { R1: 'BAC R1', R2: 'BAC R2', R3: 'BAC R3', R4: 'BAC R4' };
+        document.getElementById('selectedTankName').textContent = tankNames[currentTank];
+        document.getElementById('coeffDisplay').textContent = 'Coefficient: ' + coefficients[currentTank].toFixed(3);
+    }
+
+    // Save all data to localStorage
+    function saveAllData() {
+        try {
+            localStorage.setItem('debit_selectedTank', currentTank);
+            localStorage.setItem('debit_nowValue', document.getElementById('nowInput').value || '');
+            localStorage.setItem('debit_oldValue', document.getElementById('oldInput').value || '');
+            localStorage.setItem('debit_timeValue', document.getElementById('timeInput').value || '');
+            localStorage.setItem('debit_history', JSON.stringify(history));
+        } catch(e) {
+            console.log('Save error:', e);
+        }
+    }
+
+    // Load all data from localStorage
+    function loadAllData() {
+        try {
+            var savedTank = localStorage.getItem('debit_selectedTank');
+            if (savedTank && (savedTank === 'R1' || savedTank === 'R2' || savedTank === 'R3' || savedTank === 'R4')) {
                 currentTank = savedTank;
-                updateTankSelection();
+                updateTankUI();
             }
             
-            const savedOld = localStorage.getItem('oldValue');
-            if (savedOld) {
+            var savedNow = localStorage.getItem('debit_nowValue');
+            if (savedNow !== null && savedNow !== '') {
+                document.getElementById('nowInput').value = savedNow;
+            }
+            
+            var savedOld = localStorage.getItem('debit_oldValue');
+            if (savedOld !== null && savedOld !== '') {
                 document.getElementById('oldInput').value = savedOld;
             }
             
-            const savedHistory = localStorage.getItem('history');
+            var savedTime = localStorage.getItem('debit_timeValue');
+            if (savedTime !== null && savedTime !== '') {
+                document.getElementById('timeInput').value = savedTime;
+            }
+            
+            var savedHistory = localStorage.getItem('debit_history');
             if (savedHistory) {
                 history = JSON.parse(savedHistory);
                 updateHistoryDisplay();
             }
+        } catch(e) {
+            console.log('Load error:', e);
         }
+    }
 
-        // Save data
-        function saveData() {
-            localStorage.setItem('selectedTank', currentTank);
-            localStorage.setItem('oldValue', document.getElementById('oldInput').value);
-            localStorage.setItem('history', JSON.stringify(history));
-        }
-
-        // Update tank selection UI
-        function updateTankSelection() {
-            document.querySelectorAll('.tank-btn').forEach(btn => {
-                if (btn.dataset.tank === currentTank) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            });
-            
-            const tankNames = { R1: 'BAC R1', R2: 'BAC R2', R3: 'BAC R3', R4: 'BAC R4' };
-            document.getElementById('selectedTank').textContent = tankNames[currentTank];
-            document.getElementById('coeffDisplay').textContent = `Coefficient: ${coefficients[currentTank].toFixed(3)}`;
-        }
-
-        function showToast(message, duration = 2000) {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, duration);
-        }
-
-        // Calculate flow rate
-        function calculateFlow() {
-            const nowInput = document.getElementById('nowInput');
-            const timeInput = document.getElementById('timeInput');
-            const oldInput = document.getElementById('oldInput');
-            
-            const now = parseFloat(nowInput.value);
-            const time = parseFloat(timeInput.value);
-            const old = parseFloat(oldInput.value) || 0;
-            
-            if (isNaN(now)) {
-                showToast('❌ Veuillez entrer la valeur NOW');
-                nowInput.focus();
-                return;
-            }
-            
-            if (isNaN(time) || time <= 0) {
-                showToast('❌ Veuillez entrer un temps valide (> 0)');
-                timeInput.focus();
-                return;
-            }
-            
-            const difference = now - old;
-            const flowRate = (difference * coefficients[currentTank]) / time;
-            
-            // Display results
-            const differenceElem = document.getElementById('differenceValue');
-            const flowRateElem = document.getElementById('flowRateValue');
-            const resultCard = document.getElementById('resultCard');
-            
-            differenceElem.textContent = difference.toFixed(3);
-            flowRateElem.textContent = flowRate.toFixed(3) + ' m³/h';
-            
-            // Color code flow rate
-            flowRateElem.classList.remove('flow-low', 'flow-medium', 'flow-high');
-            if (flowRate < 50) {
-                flowRateElem.classList.add('flow-low');
-            } else if (flowRate < 150) {
-                flowRateElem.classList.add('flow-medium');
-            } else {
-                flowRateElem.classList.add('flow-high');
-            }
-            
-            resultCard.classList.add('show');
-            
-            // Add to history
-            const nowDate = new Date();
-            const timestamp = nowDate.toLocaleString('fr-FR');
-            
-            const historyEntry = {
-                timestamp: timestamp,
-                tank: `BAC ${currentTank}`,
-                now: now,
-                old: old,
-                time: time,
-                difference: difference,
-                flowRate: flowRate
-            };
-            
-            history.unshift(historyEntry);
-            if (history.length > 20) history.pop();
-            
-            updateHistoryDisplay();
-            saveData();
-            
-            showToast('✅ Calcul effectué avec succès!');
-            
-            // Haptic feedback if supported
-            if (navigator.vibrate) navigator.vibrate(50);
+    // Update history display
+    function updateHistoryDisplay() {
+        var historyDiv = document.getElementById('historyList');
+        
+        if (!history || history.length === 0) {
+            historyDiv.innerHTML = '<div class="empty-history">Aucun calcul effectué</div>';
+            return;
         }
         
-        // Reset for next measurement
-        function resetForNext() {
-            const nowInput = document.getElementById('nowInput');
-            const oldInput = document.getElementById('oldInput');
-            const timeInput = document.getElementById('timeInput');
-            const resultCard = document.getElementById('resultCard');
-            
-            // Copy NOW to OLD
-            if (nowInput.value) {
-                oldInput.value = nowInput.value;
-            }
-            
-            // Clear NOW and TIME
-            nowInput.value = '';
-            timeInput.value = '';
-            
-            // Hide result card
-            resultCard.classList.remove('show');
-            
-            saveData();
-            showToast('🔄 Prêt pour la prochaine mesure');
-            
-            // Focus on NOW input
+        var html = '';
+        for (var i = 0; i < history.length; i++) {
+            var h = history[i];
+            html += '<div class="history-item">';
+            html += '<div class="history-time">📅 ' + h.timestamp + '</div>';
+            html += '<div class="history-row">';
+            html += '<span class="history-tank">' + h.tank + '</span>';
+            html += '<span class="history-flow" style="color: ' + h.flowColor + '">' + h.flowRate.toFixed(2) + ' m³/h</span>';
+            html += '</div>';
+            html += '<div class="history-detail">';
+            html += 'NOW: ' + h.now.toFixed(3) + ' m | OLD: ' + h.old.toFixed(3) + ' m | TIME: ' + h.time.toFixed(2) + ' h';
+            html += '</div></div>';
+        }
+        
+        historyDiv.innerHTML = html;
+    }
+
+    // Add calculation to history
+    function addToHistory(tankName, now, old, time, flowRate) {
+        var nowDate = new Date();
+        var timestamp = nowDate.toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+        
+        var flowColor = '#34a853';
+        if (flowRate >= 100) flowColor = '#ea4335';
+        else if (flowRate >= 50) flowColor = '#f9ab00';
+        
+        var historyEntry = {
+            timestamp: timestamp,
+            tank: tankName,
+            now: now,
+            old: old,
+            time: time,
+            flowRate: flowRate,
+            flowColor: flowColor
+        };
+        
+        history.unshift(historyEntry);
+        if (history.length > 15) history.pop();
+        
+        updateHistoryDisplay();
+        saveAllData();
+    }
+
+    // Calculate flow rate
+    function calculateFlow() {
+        var nowInput = document.getElementById('nowInput');
+        var oldInput = document.getElementById('oldInput');
+        var timeInput = document.getElementById('timeInput');
+        
+        var now = parseFloat(nowInput.value);
+        var old = parseFloat(oldInput.value) || 0;
+        var time = parseFloat(timeInput.value);
+        
+        // Validation
+        if (isNaN(now)) {
+            showToast('❌ Veuillez entrer le niveau actuel (NOW)');
             nowInput.focus();
-            
-            // Haptic feedback
+            return;
+        }
+        
+        if (isNaN(time) || time <= 0) {
+            showToast('❌ Veuillez entrer un temps valide (> 0 heures)');
+            timeInput.focus();
+            return;
+        }
+        
+        // Calculate
+        var difference = now - old;
+        var flowRate = (difference * coefficients[currentTank]) / time;
+        
+        // Display result
+        document.getElementById('differenceValue').textContent = difference.toFixed(3) + ' m';
+        var flowElem = document.getElementById('flowRateValue');
+        flowElem.textContent = flowRate.toFixed(3) + ' m³/h';
+        
+        // Color coding
+        flowElem.classList.remove('flow-low', 'flow-medium', 'flow-high');
+        if (flowRate < 50) {
+            flowElem.classList.add('flow-low');
+        } else if (flowRate < 150) {
+            flowElem.classList.add('flow-medium');
+        } else {
+            flowElem.classList.add('flow-high');
+        }
+        
+        // Show result card
+        var resultCard = document.getElementById('resultCard');
+        resultCard.classList.add('show');
+        
+        // Scroll to result
+        resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        
+        // Add to history
+        var tankNames = { R1: 'BAC R1', R2: 'BAC R2', R3: 'BAC R3', R4: 'BAC R4' };
+        addToHistory(tankNames[currentTank], now, old, time, flowRate);
+        
+        showToast('✅ Calcul effectué avec succès!');
+        
+        // Haptic feedback
+        if (navigator.vibrate) navigator.vibrate(50);
+    }
+
+    // Reset: Copy NOW to OLD, clear NOW and TIME
+    function resetForNext() {
+        var nowInput = document.getElementById('nowInput');
+        var oldInput = document.getElementById('oldInput');
+        var timeInput = document.getElementById('timeInput');
+        
+        // Copy NOW to OLD
+        if (nowInput.value !== '' && nowInput.value !== null) {
+            oldInput.value = nowInput.value;
+        }
+        
+        // Clear NOW and TIME
+        nowInput.value = '';
+        timeInput.value = '';
+        
+        // Hide result card
+        document.getElementById('resultCard').classList.remove('show');
+        
+        saveAllData();
+        showToast('🔄 NOW copié vers OLD - Prêt pour la prochaine mesure');
+        
+        nowInput.focus();
+        
+        if (navigator.vibrate) navigator.vibrate(30);
+    }
+
+    // Clear all history
+    function clearHistory() {
+        if (confirm('Effacer tout l\'historique des calculs ?')) {
+            history = [];
+            updateHistoryDisplay();
+            saveAllData();
+            showToast('🗑️ Historique effacé');
             if (navigator.vibrate) navigator.vibrate(30);
         }
-        
-        // Update history display
-        function updateHistoryDisplay() {
-            const historyList = document.getElementById('historyList');
-            
-            if (history.length === 0) {
-                historyList.innerHTML = '<div style="text-align: center; color: #999; padding: 20px;">Aucun calcul effectué</div>';
-                return;
-            }
-            
-            historyList.innerHTML = history.map(entry => `
-                <div class="history-item">
-                    <div class="history-time">📅 ${entry.timestamp}</div>
-                    <div class="history-details">
-                        <span>${entry.tank}</span>
-                        <span>${entry.flowRate.toFixed(2)} m³/h</span>
-                    </div>
-                    <div class="history-details" style="font-size: 10px; margin-top: 4px;">
-                        <span>NOW: ${entry.now.toFixed(2)}</span>
-                        <span>OLD: ${entry.old.toFixed(2)}</span>
-                        <span>TIME: ${entry.time.toFixed(2)}h</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-        
-        // Clear history
-        function clearHistory() {
-            if (confirm('Effacer tout l\'historique ?')) {
-                history = [];
-                updateHistoryDisplay();
-                saveData();
-                showToast('🗑️ Historique effacé');
-                if (navigator.vibrate) navigator.vibrate(30);
-            }
-        }
-        
-        // Event listeners
-        function setupEventListeners() {
-            // Tank selection
-            document.querySelectorAll('.tank-btn').forEach(btn => {
-                btn.addEventListener('click', () => {
-                    currentTank = btn.dataset.tank;
-                    updateTankSelection();
-                    saveData();
-                    showToast(`✅ ${btn.textContent} sélectionné`);
-                });
+    }
+
+    // Auto-save on input change
+    function setupAutoSave() {
+        var inputs = ['nowInput', 'oldInput', 'timeInput'];
+        for (var i = 0; i < inputs.length; i++) {
+            var input = document.getElementById(inputs[i]);
+            input.addEventListener('input', function() {
+                saveAllData();
             });
-
-            // FIXED: Added missing event listeners
-            document.getElementById('calculateBtn').addEventListener('click', calculateFlow);
-            document.getElementById('resetBtn').addEventListener('click', resetForNext);
-            document.getElementById('clearHistoryBtn').addEventListener('click', clearHistory);
-            
-            // Auto-save OLD when manually changed
-            document.getElementById('oldInput').addEventListener('input', saveData);
         }
+    }
 
-        // Initialize on load
-        window.addEventListener('DOMContentLoaded', () => {
-            loadData();
-            setupEventListeners();
+    // Setup all event listeners
+    function setupEventListeners() {
+        // Tank selection
+        var tanks = document.querySelectorAll('.tank-option');
+        for (var i = 0; i < tanks.length; i++) {
+            tanks[i].addEventListener('click', function(e) {
+                currentTank = this.getAttribute('data-tank');
+                updateTankUI();
+                saveAllData();
+                var tankName = this.querySelector('.tank-name').textContent;
+                showToast('✅ ' + tankName + ' sélectionné');
+                if (navigator.vibrate) navigator.vibrate(20);
+            });
+        }
+        
+        // Buttons
+        document.getElementById('calculateBtn').addEventListener('click', calculateFlow);
+        document.getElementById('resetBtn').addEventListener('click', resetForNext);
+        document.getElementById('clearHistoryBtn').addEventListener('click', clearHistory);
+        
+        // Enter key support
+        document.getElementById('nowInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') calculateFlow();
         });
-    </script>
+        document.getElementById('oldInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') calculateFlow();
+        });
+        document.getElementById('timeInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') calculateFlow();
+        });
+    }
+
+    // Initialize app
+    loadAllData();
+    setupEventListeners();
+    setupAutoSave();
+</script>
 </body>
 </html>
