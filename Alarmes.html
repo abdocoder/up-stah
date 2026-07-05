@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sécurité · Alarmes & Déclenchements</title>
+    <!-- Font & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f4f7fc;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .card {
+            max-width: 1300px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 36px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+            padding: 32px 36px 40px;
+            transition: all 0.2s ease;
+        }
+
+        /* header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px 24px;
+            margin-bottom: 28px;
+            border-bottom: 1px solid #e9eef3;
+            padding-bottom: 20px;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-left i {
+            font-size: 30px;
+            color: #0b3b5c;
+            background: #e6edf5;
+            padding: 10px;
+            border-radius: 18px;
+        }
+
+        .header-left h1 {
+            font-weight: 600;
+            font-size: 26px;
+            letter-spacing: -0.4px;
+            color: #0b2a41;
+        }
+
+        .header-left .badge {
+            background: #d4e2f0;
+            color: #1a4d6b;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 4px 14px;
+            border-radius: 40px;
+            margin-left: 8px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-right .tag {
+            background: #ecf3fa;
+            padding: 8px 16px;
+            border-radius: 60px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #1e4b6b;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-right .tag i {
+            font-size: 14px;
+            color: #2c6b92;
+        }
+
+        /* search area */
+        .search-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 32px;
+        }
+
+        .search-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 16px 20px;
+        }
+
+        .search-box {
+            flex: 2;
+            min-width: 240px;
+            display: flex;
+            align-items: center;
+            background: #f2f6fb;
+            border-radius: 60px;
+            padding: 4px 4px 4px 22px;
+            border: 1px solid #dce5ed;
+            transition: 0.2s;
+        }
+
+        .search-box:focus-within {
+            border-color: #1f6e9e;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(28, 102, 153, 0.08);
+        }
+
+        .search-box i {
+            color: #6a7f94;
+            font-size: 16px;
+        }
+
+        .search-box input {
+            border: none;
+            background: transparent;
+            padding: 14px 16px;
+            font-size: 15px;
+            font-weight: 500;
+            width: 100%;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            color: #13324a;
+        }
+
+        .search-box input::placeholder {
+            color: #8b9eb2;
+            font-weight: 400;
+        }
+
+        .search-box button {
+            background: #1d5f86;
+            border: none;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 10px 28px;
+            border-radius: 60px;
+            cursor: pointer;
+            transition: 0.15s;
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .search-box button:hover {
+            background: #124a6b;
+            transform: scale(0.97);
+        }
+
+        .search-box button i {
+            color: white;
+            font-size: 14px;
+        }
+
+        .filter-hint {
+            font-size: 13px;
+            color: #3f5e79;
+            background: #eef4fa;
+            padding: 6px 20px;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .filter-hint i {
+            color: #1d5f86;
+        }
+
+        /* result table */
+        .result-container {
+            background: #fafcff;
+            border-radius: 24px;
+            border: 1px solid #e2eaf2;
+            overflow: hidden;
+            margin-top: 6px;
+            transition: 0.2s;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 1fr 2.5fr 1fr 0.6fr;
+            background: #e9f0f7;
+            padding: 16px 24px;
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            color: #1e4a69;
+            border-bottom: 1px solid #d3dfe9;
+        }
+
+        .table-header span:last-child {
+            text-align: right;
+        }
+
+        .alarm-list {
+            max-height: 440px;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        .alarm-list::-webkit-scrollbar {
+            width: 5px;
+        }
+        .alarm-list::-webkit-scrollbar-track {
+            background: #eef4fa;
+        }
+        .alarm-list::-webkit-scrollbar-thumb {
+            background: #b8ccdd;
+            border-radius: 20px;
+        }
+
+        .alarm-item {
+            display: grid;
+            grid-template-columns: 1fr 2.5fr 1fr 0.6fr;
+            padding: 16px 24px;
+            border-bottom: 1px solid #e6eef7;
+            align-items: center;
+            background: white;
+            transition: 0.1s;
+            font-size: 14px;
+        }
+
+        .alarm-item:hover {
+            background: #f4f9ff;
+        }
+
+        .alarm-item:last-child {
+            border-bottom: none;
+        }
+
+        .alarm-code {
+            font-weight: 700;
+            color: #10324b;
+            letter-spacing: 0.2px;
+            font-size: 15px;
+        }
+
+        .alarm-cause {
+            color: #1e3b52;
+            padding-right: 12px;
+            line-height: 1.4;
+        }
+
+        .alarm-value {
+            font-weight: 600;
+            color: #1e5c7e;
+            background: #e3edf6;
+            padding: 3px 12px;
+            border-radius: 40px;
+            text-align: center;
+            font-size: 13px;
+            display: inline-block;
+            justify-self: start;
+        }
+
+        .alarm-type {
+            justify-self: end;
+            font-size: 13px;
+            font-weight: 500;
+            background: #dce8f2;
+            padding: 4px 12px;
+            border-radius: 30px;
+            color: #1f4765;
+        }
+
+        .alarm-type.alarme {
+            background: #fce9e6;
+            color: #a13d33;
+        }
+
+        .alarm-type.declenchement {
+            background: #f1dcdc;
+            color: #8f2e2e;
+        }
+
+        .no-result {
+            padding: 50px 20px;
+            text-align: center;
+            color: #56748c;
+            font-weight: 500;
+            font-size: 16px;
+            background: white;
+        }
+
+        .no-result i {
+            font-size: 32px;
+            color: #b2c9dd;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .footer-note {
+            margin-top: 24px;
+            display: flex;
+            justify-content: flex-end;
+            font-size: 13px;
+            color: #59758e;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .footer-note span i {
+            margin-right: 6px;
+            color: #3b6e92;
+        }
+
+        @media (max-width: 800px) {
+            .card { padding: 24px 16px; }
+            .table-header, .alarm-item {
+                grid-template-columns: 1.2fr 2fr 0.9fr 0.7fr;
+                padding: 14px 16px;
+                font-size: 13px;
+            }
+            .search-wrapper { flex-direction: column; align-items: stretch; }
+            .search-box { padding-left: 16px; }
+            .filter-hint { align-self: flex-start; }
+        }
+
+        @media (max-width: 550px) {
+            .table-header { display: none; }
+            .alarm-item {
+                grid-template-columns: 1fr;
+                gap: 6px;
+                border-bottom: 2px solid #e2ebf3;
+                padding: 18px 16px;
+            }
+            .alarm-item .alarm-code { font-size: 17px; }
+            .alarm-item .alarm-type { justify-self: start; }
+            .alarm-item .alarm-value { justify-self: start; }
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <div class="header">
+        <div class="header-left">
+            <i class="fas fa-shield-alt"></i>
+            <h1>Alarmes & Sécurités <span class="badge">GT · GII</span></h1>
+        </div>
+        <div class="header-right">
+            <span class="tag"><i class="fas fa-database"></i> 57 références</span>
+            <span class="tag"><i class="fas fa-code"></i> code alar</span>
+        </div>
+    </div>
+
+    <div class="search-section">
+        <div class="search-wrapper">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="Entrez un code alarme (ex: PSH 772, LSHH 703, XSH 760...)" autofocus>
+                <button id="searchBtn"><i class="fas fa-arrow-right"></i> Chercher</button>
+            </div>
+            <div class="filter-hint"><i class="fas fa-circle-info"></i> 3 caractères + numéro · insensible à la casse</div>
+        </div>
+    </div>
+
+    <div class="result-container">
+        <div class="table-header">
+            <span>Code</span>
+            <span>Description / cause</span>
+            <span>Valeur</span>
+            <span>Type</span>
+        </div>
+        <div class="alarm-list" id="alarmList">
+            <!-- Dynamically rendered -->
+        </div>
+    </div>
+    <div class="footer-note">
+        <span><i class="fas fa-asterisk"></i> Alarmes · déclenchements sans/sous décompression</span>
+        <span><i class="fas fa-arrow-up"></i> saisir un code pour filtrer</span>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ----- DATA SOURCE (fusion des deux tableaux) -----
+        const alarmData = [
+            // --- 1er tableau : Anomalies pendant la marche « Alarme » ---
+            { code: "PSH 772", cause: "Haute pression d’huile de refoulement pompe auxiliaire C701/702 (arrêt de la pompe)", value: "21 bars", type: "Alarme" },
+            { code: "PSH 776", cause: "La pompe auxiliaire C701/702 en service (alarme témoin de marche)", value: "16 bars", type: "Alarme" },
+            { code: "PSH 782", cause: "Pression de gaz de barrage haute, compresseur BP et conduite d’équilibrage.", value: "0,5 bars", type: "Alarme" },
+            { code: "LSH 763", cause: "Haut niveau d’huile dans le ballon surélevé BP", value: "800 mm", type: "Alarme" },
+            { code: "LSH 760", cause: "Haut niveau d’huile dans ballon surélevé HP", value: "1070 mm", type: "Alarme" },
+            { code: "LSH 768", cause: "Haut niveau d’huile dans le purgeur Asp C701", value: "120 mm", type: "Alarme" },
+            { code: "LSH 766", cause: "Haut niveau d’huile dans purgeur refoulement C701", value: "120 mm", type: "Alarme" },
+            { code: "LSH 766", cause: "Haut niveau d’hoile dans purgeur Aspiration C702", value: "120 mm", type: "Alarme" },
+            { code: "LSH 767", cause: "Haut niveau d’huile dans purgeur refoulement C702", value: "120 mm", type: "Alarme" },
+            { code: "PSL 763", cause: "Basse pression d’air instrument", value: "4,14 bars", type: "Alarme" },
+            { code: "PSL 771", cause: "Basse pression d’huile de barrage/commande, démarrage pompe auxiliaire C701/C702", value: "19 bars", type: "Alarme" },
+            { code: "PSL 769", cause: "Basse pression gaz séparateur BP", value: "0,09 b", type: "Alarme" },
+            { code: "TSLL 777", cause: "Basse température d’huile dans la caisse C701/702", value: "20°C", type: "Alarme" },
+            { code: "PSL 779", cause: "Basse pression de gaz de barrage, conduite d’équilibrage compresseur HP", value: "0,1 b", type: "Alarme" },
+            { code: "PSL 782", cause: "Bâssse pression gaz de barrage, conduite d’équilibrage compresseur BP", value: "0,5 b", type: "Alarme" },
+            { code: "PDSH 774", cause: "Haute DP filtre d’huile de lubrification", value: "0,8 b", type: "Alarme" },
+            { code: "PSH 762", cause: "Haute pression de gaz séparateur BP", value: "0,69 b", type: "Alarme" },
+            { code: "LAH 701", cause: "Haut niveau liquide dans V701", value: "914 mm", type: "Alarme" },
+            { code: "LAH 706", cause: "Haut niveau liquide dans V702", value: "305 mm", type: "Alarme" },
+            { code: "LAH 708", cause: "Haut niveau liquide dans V703", value: "305 mm", type: "Alarme" },
+            { code: "LAH 710", cause: "Haut niveau liquide dans V704", value: "305 mm", type: "Alarme" },
+            { code: "LAH 712", cause: "Haut niveau liquide dans V705", value: "305 mm", type: "Alarme" },
+            { code: "LAH 714", cause: "Haut niveau liquide dans V707", value: "305 mm", type: "Alarme" },
+            { code: "LAH 716", cause: "Haut niveau liquide dans V708", value: "139°C", type: "Alarme" },
+            { code: "TAH 701", cause: "Haute température refoulement 1er étage C701", value: "131°C", type: "Alarme" },
+            { code: "TAH 703", cause: "Haute température refoulement 1er étage C702", value: "2,2 mls", type: "Alarme" },
+            { code: "TAH 704", cause: "Haute température refoulement 2ème étage C702", value: "2,2 mls", type: "Alarme" },
+            { code: "XSH 760", cause: "Haute vibrations, engrenage côté primaire", value: "2,2 mls", type: "Alarme" },
+            { code: "XSH 761", cause: "Hautes vibrations, engrenage côté arbre secondaire", value: "2,2 mls", type: "Alarme" },
+            { code: "XSH 762", cause: "Hautes vibrations aspiration C702", value: "2,2 mls", type: "Alarme" },
+            { code: "XSH 763", cause: "Hautes vibrations refoulement C702", value: "2,2 mls", type: "Alarme" },
+            { code: "XSH 764", cause: "Hautes vibrations aspiration C701", value: "2,2 mls", type: "Alarme" },
+            { code: "XSH765", cause: "Hautes vibrations refoulement C701", value: "20 mls", type: "Alarme" },
+            { code: "ZSH 760", cause: "Haut déplacement axial", value: "20 mls", type: "Alarme" },
+
+            // --- 2nd tableau : Sécurités de déclenchement GT (sans décompression) ---
+            { code: "LSHH 703", cause: "Très haut niveau de liquide dans V701", value: "1067 mm", type: "Déclenchement" },
+            { code: "LSHH 709", cause: "Très haut niveau de liquide dans V702", value: "457 mm", type: "Déclenchement" },
+            { code: "LSHH 707", cause: "Très haut niveau de liquide dans V703", value: "457 mm", type: "Déclenchement" },
+            { code: "LSHH 709", cause: "Très haut niveau de liquide dans V704", value: "457 mm", type: "Déclenchement" },
+            { code: "LSHH 711", cause: "Très haut niveau de liquide dans V705", value: "457 mm", type: "Déclenchement" },
+            { code: "LSHH 713", cause: "Très haut niveau de liquide dans V707", value: "610 mm", type: "Déclenchement" },
+            { code: "LSHH 715", cause: "Très haut niveau de liquide dans V708", value: "153°C", type: "Déclenchement" },
+            { code: "TSHH 720", cause: "Très haute température de refoulement 1er étage C701", value: "153°C", type: "Déclenchement" },
+            { code: "TSHH 721", cause: "Très haute température de refoulement 2ème étage C701", value: "153°C", type: "Déclenchement" },
+            { code: "TSHH 722", cause: "Très haute température de refoulement 1er étage C702", value: "165°C", type: "Déclenchement" },
+            { code: "TSHH 763", cause: "Très haute température de refoulement 2ème étage C702", value: "180°C", type: "Déclenchement" },
+            { code: "TSHH 765", cause: "Très haute température palier engrenage arbre primaire", value: "115°C", type: "Déclenchement" },
+            { code: "TSHH 768", cause: "Très haute température palier engrenage arbre primaire", value: "160°C", type: "Déclenchement" },
+            { code: "TSHH 769", cause: "Très haute température palier de butée engrenage arbre primaire", value: "100°C", type: "Déclenchement" },
+            { code: "TSHH 771", cause: "Très haute température palier de butée engrenage arbre primaire", value: "100°C", type: "Déclenchement" },
+            { code: "TSHH 766", cause: "Très haute température palier engrenage arbre primaire", value: "110°C", type: "Déclenchement" },
+            { code: "TSHH 767", cause: "Très haute température palier engrenage arbre primaire", value: "110 °C", type: "Déclenchement" },
+            { code: "TSHH 764", cause: "Très haute température palier aspiration C702", value: "100°C", type: "Déclenchement" },
+            { code: "TSHH 773", cause: "Très haute température palier refoulement C702", value: "100°C", type: "Déclenchement" },
+            { code: "TSHH 774", cause: "Très haute température palier aspiration C701", value: "100°C", type: "Déclenchement" },
+            { code: "TSHH 775", cause: "Très haute température palier refoulement C701", value: "0,5 b", type: "Déclenchement" },
+            { code: "PSL 778", cause: "Très basse pression aspiration de compresseur", value: "3,3 mls", type: "Déclenchement" },
+            { code: "XSHH 760", cause: "Très hautes vibrations engrenage arbre primaire", value: "3,3 mls", type: "Déclenchement" },
+            { code: "XSHH 761", cause: "Très hautes vibrations engrenage arbre secondaire", value: "3,3 mls", type: "Déclenchement" },
+            { code: "XSHH 762", cause: "Très hautes vibrations aspiration C702", value: "3,3 mls", type: "Déclenchement" },
+            { code: "XSHH 763", cause: "Très hautes vibrations refoulement C702", value: "3,3 mls", type: "Déclenchement" },
+            { code: "XSHH 764", cause: "Très hautes vibrations aspiration C701", value: "3,3 mls", type: "Déclenchement" },
+            { code: "XSHH 765", cause: "Très hautes vibrations refoulement C701", value: "40 mls", type: "Déclenchement" },
+            { code: "ZSHH 760", cause: "Très haut déplacement axial engrenage arbre secondaire", value: "40 mls", type: "Déclenchement" },
+
+            // --- Déclenchement GII avec décompression ---
+            { code: "PSLL 784", cause: "Très basse pression d’huile de lubrification", value: "650 mm", type: "Déclenchement" },
+            { code: "LSLL 764", cause: "Très bas niveau d’huile dans le ballon surélevé BP", value: "840 mm", type: "Déclenchement" },
+            { code: "LSLL 761", cause: "Très bas niveau d’huile dans le ballon surélevé HP", value: "—", type: "Déclenchement" },
+            { code: "LSLL 762", cause: "Très bas niveau dans la caisse d’huile des compresseurs C701/702", value: "—", type: "Déclenchement" }
+        ];
+
+        // DOM refs
+        const searchInput = document.getElementById('searchInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const alarmListEl = document.getElementById('alarmList');
+
+        function renderAlarms(filter = '') {
+            const trimmed = filter.trim().toLowerCase();
+            let filtered = alarmData;
+
+            if (trimmed !== '') {
+                filtered = alarmData.filter(item => 
+                    item.code.toLowerCase().includes(trimmed) ||
+                    item.cause.toLowerCase().includes(trimmed)
+                );
+            }
+
+            if (filtered.length === 0) {
+                alarmListEl.innerHTML = `
+                    <div class="no-result">
+                        <i class="fas fa-circle-exclamation"></i>
+                        Aucune alarme trouvée pour « ${filter.trim()} »
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            filtered.forEach(item => {
+                const typeClass = item.type === 'Alarme' ? 'alarme' : 'declenchement';
+                html += `
+                    <div class="alarm-item">
+                        <span class="alarm-code">${item.code}</span>
+                        <span class="alarm-cause">${item.cause}</span>
+                        <span class="alarm-value">${item.value}</span>
+                        <span class="alarm-type ${typeClass}">${item.type}</span>
+                    </div>
+                `;
+            });
+            alarmListEl.innerHTML = html;
+        }
+
+        // Event listeners
+        function performSearch() {
+            renderAlarms(searchInput.value);
+        }
+
+        searchBtn.addEventListener('click', performSearch);
+        searchInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') performSearch();
+        });
+
+        // initial render (all)
+        renderAlarms();
+
+        // small enhancement: clear button ?
+        // optional: if input empty, show all (already handled)
+        // also detect change to re-render if user clears input ?
+        searchInput.addEventListener('input', function() {
+            if (this.value.trim() === '') {
+                renderAlarms('');
+            }
+        });
+
+    })();
+</script>
+</body>
+</html>
